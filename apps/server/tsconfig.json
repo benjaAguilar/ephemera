@@ -10,11 +10,11 @@
 
     "types": ["node"],
 
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
 
     "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo"
   },
 
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
