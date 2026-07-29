@@ -64,7 +64,6 @@ To encourage genuine learning, pull requests or issues that appear to be generat
 
 If you're interested in privacy, distributed systems, or simply learning by building, feel free to join the project.
 
-
 ## License
 
 This project is licensed under the MIT License.
