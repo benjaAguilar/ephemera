@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:18
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: picklerick
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/ephemera
+      - /ephemera/node_modules
+      - /ephemera/apps/server/node_modules
+      - /ephemera/apps/client/node_modules
+    command: pnpm dev --host
+    ports:
+      - 3000:3000
+      - 5173:5173
