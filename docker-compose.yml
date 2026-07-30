@@ -3,8 +3,14 @@ services:
     image: postgres:18
     environment:
       POSTGRES_PASSWORD: picklerick
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
 
   app:
     build: .
     ports:
       - 3000:3000
+
+volumes:
+  postgres_data_prod:
+    name: ephemera_prod_db
