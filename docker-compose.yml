@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:18
+    restart: unless-stopped
     env_file:
       - .env
     volumes:
@@ -8,6 +9,7 @@ services:
 
   app:
     build: .
+    restart: unless-stopped
     ports:
       - 3000:3000
 
