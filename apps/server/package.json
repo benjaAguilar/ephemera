@@ -9,13 +9,19 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.1",
     "@vitest/coverage-v8": "^4.1.10",
+    "prisma": "^7.9.1",
     "supertest": "^7.2.2",
     "vitest": "^4.1.10"
   },

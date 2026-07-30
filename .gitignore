@@ -1,3 +1,5 @@
 node_modules/
 .env
 dist/
+apps/server/prisma/generated/prisma/
+
