@@ -1,15 +1,24 @@
 services:
   db:
     image: postgres:18
+    restart: unless-stopped
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_PASSWORD: picklerick
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      timeout: 2s
+      interval: 1s
+      retries: 20
 
   app:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    restart: unless-stopped
     volumes:
       - .:/ephemera
       - /ephemera/node_modules
@@ -19,3 +28,9 @@ services:
     ports:
       - 3000:3000
       - 5173:5173
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
