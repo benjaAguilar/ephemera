@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_PASSWORD: picklerick
+
+  app:
+    build: .
+    ports:
+      - 3000:3000
