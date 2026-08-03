@@ -8,5 +8,69 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id                 Int                   @id @default(autoincrement())
+  username           String                @unique
+  conversations      ConversationMembers[]
+  owningConversation Conversation[]
+  messages           Message[]
+  expiresIn          DateTime
+  createdAt          DateTime              @default(now())
+}
+
+model ConversationMembers {
+  id                Int          @id @default(autoincrement())
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            Int
+  conversation      Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId    Int
+  joinedAt          DateTime     @default(now())
+  lastReadMessageId Int?
+  role              Role
+
+  @@unique([conversationId, userId])
+}
+
+model Conversation {
+  id               Int                   @id @default(autoincrement())
+  publicId         String                @unique @default(uuid()) @db.Uuid
+  name             String?
+  owner            User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          Int
+  members          ConversationMembers[]
+  messages         Message[]
+  conversationType ConversationType
+  visibility       Visibility
+  sendPolicy       SendPolicy
+  expiresIn        DateTime
+  createdAt        DateTime              @default(now())
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId Int
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       Int
+  content        String // this is temporal, can change when add e2e encryption
+  createdAt      DateTime     @default(now())
+}
+
+enum ConversationType {
+  GROUP // multiple users on one chat
+  PRIVATE // private, just two users
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+enum Visibility {
+  PRIVATE // private groups or chats private invitations to usernames
+  PUBLIC // anyone can join on the public room search
+}
+
+enum SendPolicy {
+  EVERYONE
+  ADMINS_ONLY
 }
