@@ -24,3 +24,10 @@ export class NotFoundError extends AppError {
     Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }
+
+export class ValidationError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(400, message, true, details);
+    Object.setPrototypeOf(this, ValidationError.prototype);
+  }
+}
