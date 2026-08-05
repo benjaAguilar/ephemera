@@ -8,6 +8,7 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
 COPY apps/server/package.json ./apps/server/
 COPY apps/client/package.json ./apps/client/
+COPY packages/schemas/package.json ./packages/schemas/
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 
