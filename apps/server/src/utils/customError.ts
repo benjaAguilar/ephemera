@@ -31,3 +31,10 @@ export class ValidationError extends AppError {
     Object.setPrototypeOf(this, ValidationError.prototype);
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(401, message, true, details);
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
+  }
+}
