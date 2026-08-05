@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import router from './routes/index.js';
+import { errorHandler } from './controllers/errorHandler.js';
 
 const app = express();
 
@@ -21,5 +22,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(publicPath, 'index.html'));
   });
 }
+
+app.use(errorHandler);
 
 export default app;
