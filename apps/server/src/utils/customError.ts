@@ -38,3 +38,10 @@ export class UnauthorizedError extends AppError {
     Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
 }
+
+export class ForbiddenError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(403, message, true, details);
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
+  }
+}
