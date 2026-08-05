@@ -17,3 +17,10 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, AppError.prototype);
   }
 }
+
+export class NotFoundError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(404, message, true, details);
+    Object.setPrototypeOf(this, NotFoundError.prototype);
+  }
+}
