@@ -17,3 +17,38 @@ export class AppError extends Error {
     Object.setPrototypeOf(this, AppError.prototype);
   }
 }
+
+export class NotFoundError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(404, message, true, details);
+    Object.setPrototypeOf(this, NotFoundError.prototype);
+  }
+}
+
+export class ValidationError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(400, message, true, details);
+    Object.setPrototypeOf(this, ValidationError.prototype);
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(401, message, true, details);
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(403, message, true, details);
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(409, message, true, details);
+    Object.setPrototypeOf(this, ConflictError.prototype);
+  }
+}
