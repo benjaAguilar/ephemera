@@ -45,3 +45,10 @@ export class ForbiddenError extends AppError {
     Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
 }
+
+export class ConflictError extends AppError {
+  constructor(message: string, details?: Array<object>) {
+    super(409, message, true, details);
+    Object.setPrototypeOf(this, ConflictError.prototype);
+  }
+}
