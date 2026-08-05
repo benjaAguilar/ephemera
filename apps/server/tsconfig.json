@@ -16,5 +16,6 @@
     "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo"
   },
 
-  "include": ["src", "tests"]
+  "include": ["src", "tests"],
+  "references": [{ "path": "../../packages/schemas" }]
 }
