@@ -1,6 +1,8 @@
 node_modules
 /apps/*/node_modules
 /apps/server/dist
+/packages/*/node_modules
+/packages/*/dist
 .git
 .env
 .env.*
