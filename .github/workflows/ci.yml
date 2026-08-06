@@ -34,7 +34,7 @@ jobs:
         run: pnpm install
 
       - name: Build local packages
-        run: pnpm --filter @ephemera/schemas build
+        run: pnpm build:packages
 
       - name: Check linting
         run: pnpm lint
