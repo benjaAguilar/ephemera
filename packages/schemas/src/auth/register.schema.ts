@@ -15,3 +15,5 @@ export const RegisterSchema = z.object({
     .regex(/^[^\s]+$/, { message: 'No spaces are allowed between the name' }),
   ttl: z.enum(TTL_OPTIONS, { message: 'Please select a valid time to live duration' }),
 });
+
+export type RegisterType = z.infer<typeof RegisterSchema>;
