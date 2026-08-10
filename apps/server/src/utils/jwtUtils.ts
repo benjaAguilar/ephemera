@@ -33,7 +33,8 @@ export function verifyJWT(token: string) {
   try {
     const decoded = jsonwebtoken.verify(token, secret) as JWTpayload; // justified type assertion since sign always gonna receive an object
     return decoded;
-  } catch (err) {
+  } catch (_err) {
+    // posible fix: should use err to give more info details at server level
     throw new UnauthorizedError('Invalid or expired session');
   }
 }
