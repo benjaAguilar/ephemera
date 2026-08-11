@@ -10,24 +10,35 @@ vi.mock('../../src/utils/jwtUtils.ts', () => ({
 
 const prismaUserMock: UserRepository = {
   create: vi.fn(),
+  updateExpiration: vi.fn(),
 };
 const verifyJwtMock = vi.mocked(verifyJWT);
 const userService = createUserService(prismaUserMock);
 
 describe('UserService', () => {
   describe('create()', () => {
-    it('should create an user whit token expiration date', () => {
+    it('should create an user', () => {
+      userService.create('rick');
+
+      expect(prismaUserMock.create).toHaveBeenCalledOnce();
+      expect(prismaUserMock.create).toHaveBeenCalledWith('rick');
+    });
+  });
+
+  describe('updateExpiration()', () => {
+    it('should update user expiration', () => {
       const expiration = Math.floor(Date.now() / 1000) + 3600;
 
       verifyJwtMock.mockReturnValue({
-        userId: 1,
+        userId: 3,
         exp: expiration,
         iat: expiration,
       });
-      userService.create('rick', 'super-valid-token');
 
-      expect(prismaUserMock.create).toHaveBeenCalledOnce();
-      expect(prismaUserMock.create).toHaveBeenCalledWith('rick', new Date(expiration * 1000));
+      userService.updateExpiration(3, 'super-token');
+
+      expect(prismaUserMock.updateExpiration).toHaveBeenCalledOnce();
+      expect(prismaUserMock.updateExpiration).toHaveBeenCalledWith(3, new Date(expiration * 1000));
     });
 
     it('should not create an user when token verification fails', () => {
@@ -36,9 +47,9 @@ describe('UserService', () => {
       });
 
       expect(() => {
-        userService.create('rick', 'super-invalid-token');
+        userService.updateExpiration(3, 'super-invalid-token');
       }).toThrow(UnauthorizedError);
-      expect(prismaUserMock.create).not.toHaveBeenCalled();
+      expect(prismaUserMock.updateExpiration).not.toHaveBeenCalled();
     });
   });
 });

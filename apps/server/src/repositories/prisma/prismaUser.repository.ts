@@ -3,11 +3,21 @@ import type { UserRepository } from '../user.repository.js';
 
 export function createPrismaUser(prisma: PrismaClient): UserRepository {
   return {
-    create(username, expiresIn) {
+    create(username) {
       return prisma.user.create({
         data: {
           username,
-          expiresIn,
+        },
+      });
+    },
+
+    updateExpiration(userId, expirationDate) {
+      return prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          expiresIn: expirationDate,
         },
       });
     },

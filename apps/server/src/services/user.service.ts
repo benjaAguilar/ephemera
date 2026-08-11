@@ -4,16 +4,23 @@ import { verifyJWT } from '../utils/jwtUtils.js';
 import type { User } from '../../prisma/generated/prisma/client.js';
 
 export interface UserService {
-  create(username: RegisterType['username'], signedToken: string): Promise<User>;
+  create(username: RegisterType['username']): Promise<User>;
+  updateExpiration(userId: number, signedToken: string): Promise<User>;
 }
 
 export function createUserService(prismaRepo: UserRepository): UserService {
   return {
-    create(username, signedToken: string) {
+    create(username) {
+      return prismaRepo.create(username);
+    },
+
+    updateExpiration(userId, signedToken) {
       const decoded = verifyJWT(signedToken);
       const expirationDate = new Date(decoded.exp * 1000);
 
-      return prismaRepo.create(username, expirationDate);
+      // TODO: verify if userId = decoded.sub
+
+      return prismaRepo.updateExpiration(userId, expirationDate);
     },
   };
 }
