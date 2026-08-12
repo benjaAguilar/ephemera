@@ -11,6 +11,7 @@ export interface UserService {
 export function createUserService(prismaRepo: UserRepository): UserService {
   return {
     create(username) {
+      //TODO: verify if username is already taken. (see issue #99)
       return prismaRepo.create(username);
     },
 
