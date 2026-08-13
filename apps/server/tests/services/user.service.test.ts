@@ -12,6 +12,7 @@ const prismaUserMock: UserRepository = {
   create: vi.fn(),
   updateExpiration: vi.fn(),
   getById: vi.fn(),
+  getByUsername: vi.fn(),
 };
 const verifyJwtMock = vi.mocked(verifyJWT);
 const userService = createUserService(prismaUserMock);
@@ -76,6 +77,33 @@ describe('UserService', () => {
 
       expect(async () => await userService.getById(4)).rejects.toThrow(NotFoundError);
       expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
+    });
+  });
+
+  describe('getByUsername()', () => {
+    it('Should call prisma with expected parameters and return the user', async () => {
+      const userMock = {
+        id: 4,
+        username: 'lisa',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+
+      vi.mocked(prismaUserMock.getByUsername).mockResolvedValueOnce(userMock);
+      const user = await userService.getByUsername('lisa');
+
+      expect(prismaUserMock.getByUsername).toHaveBeenCalledWith('lisa');
+      expect(user).toEqual(userMock);
+    });
+
+    it('should throw notFoundError if prisma returns null', async () => {
+      const userMock = null;
+      vi.mocked(prismaUserMock.getByUsername).mockResolvedValueOnce(userMock);
+
+      expect(async () => await userService.getByUsername('inexistent-user')).rejects.toThrow(
+        NotFoundError,
+      );
+      expect(prismaUserMock.getByUsername).toHaveBeenCalledWith('inexistent-user');
     });
   });
 });
