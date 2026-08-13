@@ -1,9 +1,8 @@
 import { RegisterSchema } from '@ephemera/schemas';
 import type { UserService } from '../services/user.service.js';
 import type { Request, Response } from '../types/express.js';
-import { ValidationError } from '../utils/customError.js';
 import { createJWT } from '../utils/jwtUtils.js';
-import { validateData } from '../utils/utils.js';
+import { calcExpiration, validateData } from '../utils/utils.js';
 
 interface AuthController {
   auth(req: Request, res: Response): Promise<void>;
@@ -20,12 +19,7 @@ export function createAuthController(userService: UserService): AuthController {
       const token = createJWT(user.id, data.ttl);
       const { expiresIn } = await userService.updateExpiration(user.id, token);
 
-      //TODO: refactor: in a clacExpiration util (see #105)
-      if (!expiresIn) {
-        throw new ValidationError('Bad request');
-      }
-
-      const expirationInMs = Math.ceil(expiresIn.getTime() - Date.now());
+      const expirationInMs = calcExpiration(expiresIn);
 
       res
         .status(200)

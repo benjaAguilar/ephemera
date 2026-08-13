@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateData } from '../../src/utils/utils.js';
+import { calcExpiration, validateData } from '../../src/utils/utils.js';
 import { RegisterSchema } from '@ephemera/schemas';
 import { ValidationError } from '../../src/utils/customError.js';
 
@@ -22,6 +22,18 @@ describe('utils.ts', () => {
 
     it('should return ValidationError if data is missing', () => {
       expect(() => validateData(RegisterSchema, {})).toThrow(ValidationError);
+    });
+  });
+
+  describe('calcExpiration()', () => {
+    it('should return date in MS format', () => {
+      const ONE_DAY_MS = 86400000;
+      const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      const expiresInMS = calcExpiration(expiresIn);
+
+      expect(expiresInMS).toBeTypeOf('number');
+      expect(ONE_DAY_MS).toEqual(expiresInMS);
     });
   });
 });

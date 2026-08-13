@@ -1,5 +1,5 @@
 import type { SchemaType } from '@ephemera/schemas';
-import { ValidationError } from './customError.js';
+import { AppError, ValidationError } from './customError.js';
 
 export function validateData<T extends SchemaType>(schema: T, data: unknown) {
   const res = schema.safeParse(data);
@@ -9,4 +9,12 @@ export function validateData<T extends SchemaType>(schema: T, data: unknown) {
   }
 
   return res.data;
+}
+
+export function calcExpiration(expiresIn: Date | null): number {
+  if (!expiresIn) {
+    throw new AppError(500, 'Error setting expiresIn Date');
+  }
+
+  return Math.ceil(expiresIn.getTime() - Date.now());
 }
