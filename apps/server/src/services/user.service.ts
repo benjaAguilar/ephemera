@@ -2,7 +2,7 @@ import type { RegisterType } from '@ephemera/schemas';
 import type { UserRepository } from '../repositories/user.repository.js';
 import { verifyJWT } from '../utils/jwtUtils.js';
 import type { User } from '../../prisma/generated/prisma/client.js';
-import { NotFoundError } from '../utils/customError.js';
+import { ConflictError, NotFoundError } from '../utils/customError.js';
 
 export interface UserService {
   create(username: RegisterType['username']): Promise<User>;
@@ -13,8 +13,13 @@ export interface UserService {
 
 export function createUserService(prismaRepo: UserRepository): UserService {
   return {
-    create(username) {
-      //TODO: verify if username is already taken. (see issue #99)
+    async create(username) {
+      const user = await prismaRepo.getByUsername(username);
+
+      if (user) {
+        throw new ConflictError('Username already taken');
+      }
+
       return prismaRepo.create(username);
     },
 
