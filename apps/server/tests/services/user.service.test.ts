@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import type { UserRepository } from '../../src/repositories/user.repository.js';
 import { createUserService } from '../../src/services/user.service.js';
 import { verifyJWT } from '../../src/utils/jwtUtils.js';
-import { UnauthorizedError } from '../../src/utils/customError.js';
+import { NotFoundError, UnauthorizedError } from '../../src/utils/customError.js';
 
 vi.mock('../../src/utils/jwtUtils.ts', () => ({
   verifyJWT: vi.fn(),
@@ -11,6 +11,7 @@ vi.mock('../../src/utils/jwtUtils.ts', () => ({
 const prismaUserMock: UserRepository = {
   create: vi.fn(),
   updateExpiration: vi.fn(),
+  getById: vi.fn(),
 };
 const verifyJwtMock = vi.mocked(verifyJWT);
 const userService = createUserService(prismaUserMock);
@@ -50,6 +51,31 @@ describe('UserService', () => {
         userService.updateExpiration(3, 'super-invalid-token');
       }).toThrow(UnauthorizedError);
       expect(prismaUserMock.updateExpiration).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getById()', () => {
+    it('Should call prisma with expected parameters and return the user', async () => {
+      const userMock = {
+        id: 4,
+        username: 'lisa',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+
+      vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
+      const user = await userService.getById(4);
+
+      expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
+      expect(user).toEqual(userMock);
+    });
+
+    it('should throw notFoundError if prisma returns null', async () => {
+      const userMock = null;
+      vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
+
+      expect(async () => await userService.getById(4)).rejects.toThrow(NotFoundError);
+      expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
     });
   });
 });
