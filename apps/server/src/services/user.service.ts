@@ -19,7 +19,9 @@ export function createUserService(prismaRepo: UserRepository): UserService {
       const decoded = verifyJWT(signedToken);
       const expirationDate = new Date(decoded.exp * 1000);
 
-      // TODO: verify if userId = decoded.sub
+      //TODO: verify if userId = decoded.sub
+      // Update expiration should be strict about what its doing. can't return expiresIn beign null.
+      // we should handle if userId has same decoded.sub. and if user exists. (see issue #111)
 
       return prismaRepo.updateExpiration(userId, expirationDate);
     },
