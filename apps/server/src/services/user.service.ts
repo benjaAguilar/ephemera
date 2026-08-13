@@ -8,6 +8,7 @@ export interface UserService {
   create(username: RegisterType['username']): Promise<User>;
   updateExpiration(userId: number, signedToken: string): Promise<User>;
   getById(userId: number): Promise<User>;
+  getByUsername(username: string): Promise<User>;
 }
 
 export function createUserService(prismaRepo: UserRepository): UserService {
@@ -30,6 +31,16 @@ export function createUserService(prismaRepo: UserRepository): UserService {
 
     async getById(userId) {
       const user = await prismaRepo.getById(userId);
+
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+
+      return user;
+    },
+
+    async getByUsername(username) {
+      const user = await prismaRepo.getByUsername(username);
 
       if (!user) {
         throw new NotFoundError('User not found');
