@@ -2,10 +2,12 @@ import type { RegisterType } from '@ephemera/schemas';
 import type { UserRepository } from '../repositories/user.repository.js';
 import { verifyJWT } from '../utils/jwtUtils.js';
 import type { User } from '../../prisma/generated/prisma/client.js';
+import { NotFoundError } from '../utils/customError.js';
 
 export interface UserService {
   create(username: RegisterType['username']): Promise<User>;
   updateExpiration(userId: number, signedToken: string): Promise<User>;
+  getById(userId: number): Promise<User>;
 }
 
 export function createUserService(prismaRepo: UserRepository): UserService {
@@ -24,6 +26,16 @@ export function createUserService(prismaRepo: UserRepository): UserService {
       // we should handle if userId has same decoded.sub. and if user exists. (see issue #111)
 
       return prismaRepo.updateExpiration(userId, expirationDate);
+    },
+
+    async getById(userId) {
+      const user = await prismaRepo.getById(userId);
+
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+
+      return user;
     },
   };
 }
