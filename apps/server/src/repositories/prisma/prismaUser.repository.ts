@@ -29,5 +29,13 @@ export function createPrismaUser(prisma: PrismaClient): UserRepository {
         },
       });
     },
+
+    getByUsername(username) {
+      return prisma.user.findUnique({
+        where: {
+          username: username,
+        },
+      });
+    },
   };
 }
