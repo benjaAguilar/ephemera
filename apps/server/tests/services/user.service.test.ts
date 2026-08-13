@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import type { UserRepository } from '../../src/repositories/user.repository.js';
 import { createUserService } from '../../src/services/user.service.js';
 import { verifyJWT } from '../../src/utils/jwtUtils.js';
-import { NotFoundError, UnauthorizedError } from '../../src/utils/customError.js';
+import { ConflictError, NotFoundError, UnauthorizedError } from '../../src/utils/customError.js';
 
 vi.mock('../../src/utils/jwtUtils.ts', () => ({
   verifyJWT: vi.fn(),
@@ -19,11 +19,24 @@ const userService = createUserService(prismaUserMock);
 
 describe('UserService', () => {
   describe('create()', () => {
-    it('should create an user', () => {
-      userService.create('rick');
+    it('should create an user', async () => {
+      await userService.create('rick');
 
       expect(prismaUserMock.create).toHaveBeenCalledOnce();
       expect(prismaUserMock.create).toHaveBeenCalledWith('rick');
+    });
+
+    it('should throw a ConflictError if username is already taken', async () => {
+      const userMock = {
+        id: 1,
+        username: 'rick',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+      vi.mocked(prismaUserMock.getByUsername).mockResolvedValueOnce(userMock);
+
+      expect(async () => await userService.create('rick')).rejects.toThrow(ConflictError);
+      expect(prismaUserMock.create).not.toHaveBeenCalled();
     });
   });
 
