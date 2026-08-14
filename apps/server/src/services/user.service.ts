@@ -2,11 +2,11 @@ import type { RegisterType } from '@ephemera/schemas';
 import type { UserRepository } from '../repositories/user.repository.js';
 import { verifyJWT } from '../utils/jwtUtils.js';
 import type { User } from '../../prisma/generated/prisma/client.js';
-import { ConflictError, NotFoundError } from '../utils/customError.js';
+import { AppError, ConflictError, NotFoundError } from '../utils/customError.js';
 
 export interface UserService {
   create(username: RegisterType['username']): Promise<User>;
-  updateExpiration(userId: number, signedToken: string): Promise<User>;
+  updateExpiration(userId: number, signedToken: string): Promise<Date>;
   getById(userId: number): Promise<User>;
   getByUsername(username: string): Promise<User>;
 }
@@ -23,15 +23,16 @@ export function createUserService(prismaRepo: UserRepository): UserService {
       return prismaRepo.create(username);
     },
 
-    updateExpiration(userId, signedToken) {
+    async updateExpiration(userId, signedToken) {
       const decoded = verifyJWT(signedToken);
       const expirationDate = new Date(decoded.exp * 1000);
 
-      //TODO: verify if userId = decoded.sub
-      // Update expiration should be strict about what its doing. can't return expiresIn beign null.
-      // we should handle if userId has same decoded.sub. and if user exists. (see issue #111)
+      const user = await prismaRepo.updateExpiration(userId, expirationDate);
+      if (!user.expiresIn) {
+        throw new AppError(500, 'ExpiresIn date was not set');
+      }
 
-      return prismaRepo.updateExpiration(userId, expirationDate);
+      return user.expiresIn;
     },
 
     async getById(userId) {
