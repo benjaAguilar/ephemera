@@ -2,7 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import type { UserRepository } from '../../src/repositories/user.repository.js';
 import { createUserService } from '../../src/services/user.service.js';
 import { verifyJWT } from '../../src/utils/jwtUtils.js';
-import { ConflictError, NotFoundError, UnauthorizedError } from '../../src/utils/customError.js';
+import {
+  AppError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from '../../src/utils/customError.js';
 
 vi.mock('../../src/utils/jwtUtils.ts', () => ({
   verifyJWT: vi.fn(),
@@ -41,7 +46,15 @@ describe('UserService', () => {
   });
 
   describe('updateExpiration()', () => {
-    it('should update user expiration', () => {
+    it('should update user expiration and return the date', async () => {
+      const userMock = {
+        id: 3,
+        username: 'bart',
+        createdAt: new Date(),
+        expiresIn: new Date(),
+      };
+      vi.mocked(prismaUserMock.updateExpiration).mockResolvedValueOnce(userMock);
+
       const expiration = Math.floor(Date.now() / 1000) + 3600;
 
       verifyJwtMock.mockReturnValue({
@@ -50,21 +63,36 @@ describe('UserService', () => {
         iat: expiration,
       });
 
-      userService.updateExpiration(3, 'super-token');
+      const res = await userService.updateExpiration(3, 'super-token');
 
       expect(prismaUserMock.updateExpiration).toHaveBeenCalledOnce();
       expect(prismaUserMock.updateExpiration).toHaveBeenCalledWith(3, new Date(expiration * 1000));
+      expect(res).toBeInstanceOf(Date);
     });
 
-    it('should not create an user when token verification fails', () => {
+    it('should not update date when token verification fails', () => {
       verifyJwtMock.mockImplementation(() => {
         throw new UnauthorizedError('Invalid or expired token');
       });
 
-      expect(() => {
-        userService.updateExpiration(3, 'super-invalid-token');
-      }).toThrow(UnauthorizedError);
+      expect(async () => {
+        await userService.updateExpiration(3, 'super-invalid-token');
+      }).rejects.toThrow(UnauthorizedError);
       expect(prismaUserMock.updateExpiration).not.toHaveBeenCalled();
+    });
+
+    it('Should throw an app error if expiresIn update fails', () => {
+      const userMock = {
+        id: 3,
+        username: 'bart',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+      vi.mocked(prismaUserMock.updateExpiration).mockResolvedValueOnce(userMock);
+
+      expect(async () => {
+        await userService.updateExpiration(3, 'super-valid-token');
+      }).rejects.toThrow(AppError);
     });
   });
 
