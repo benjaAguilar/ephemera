@@ -96,6 +96,33 @@ describe('UserService', () => {
     });
   });
 
+  describe('findById()', () => {
+    it('Should call prisma with expected parameters and return the user', async () => {
+      const userMock = {
+        id: 4,
+        username: 'lisa',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+
+      vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
+      const user = await userService.findById(4);
+
+      expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
+      expect(user).toEqual(userMock);
+    });
+
+    it('should return null if prisma returns null', async () => {
+      const userMock = null;
+      vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
+
+      const user = await userService.findById(4);
+
+      expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
+      expect(user).toEqual(userMock);
+    });
+  });
+
   describe('getById()', () => {
     it('Should call prisma with expected parameters and return the user', async () => {
       const userMock = {
