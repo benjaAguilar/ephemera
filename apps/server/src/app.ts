@@ -3,6 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import router from './routes/index.js';
 import { errorHandler } from './controllers/errorHandler.js';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import configurePassport from './lib/passport.js';
+import { userService } from './services/index.js';
 
 const app = express();
 
@@ -10,6 +14,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', router);
+
+app.use(cookieParser());
+configurePassport(passport, userService);
+app.use(passport.initialize());
 
 if (process.env.NODE_ENV === 'production') {
   const __filename = fileURLToPath(import.meta.url);
