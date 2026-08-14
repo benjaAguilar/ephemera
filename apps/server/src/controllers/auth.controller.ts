@@ -17,7 +17,7 @@ export function createAuthController(userService: UserService): AuthController {
       const user = await userService.create(data.username);
 
       const token = createJWT(user.id, data.ttl);
-      const { expiresIn } = await userService.updateExpiration(user.id, token);
+      const expiresIn = await userService.updateExpiration(user.id, token);
 
       const expirationInMs = calcExpiration(expiresIn);
 
