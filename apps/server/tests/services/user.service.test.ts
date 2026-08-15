@@ -18,6 +18,7 @@ const prismaUserMock: UserRepository = {
   updateExpiration: vi.fn(),
   getById: vi.fn(),
   getByUsername: vi.fn(),
+  delete: vi.fn(),
 };
 const verifyJwtMock = vi.mocked(verifyJWT);
 const userService = createUserService(prismaUserMock);
@@ -172,6 +173,30 @@ describe('UserService', () => {
         NotFoundError,
       );
       expect(prismaUserMock.getByUsername).toHaveBeenCalledWith('inexistent-user');
+    });
+  });
+
+  describe('delete()', () => {
+    it('should call prisma with expected params and return deleted user', async () => {
+      const userMock = {
+        id: 4,
+        username: 'lisa',
+        createdAt: new Date(),
+        expiresIn: null,
+      };
+
+      vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
+      vi.mocked(prismaUserMock.delete).mockResolvedValueOnce(userMock);
+
+      const user = await userService.delete(4);
+
+      expect(prismaUserMock.delete).toHaveBeenCalledWith(4);
+      expect(user).toEqual(userMock);
+    });
+
+    it('should throw NotFoundError if user does not exist', async () => {
+      await expect(async () => await userService.delete(4)).rejects.toThrow(NotFoundError);
+      expect(prismaUserMock.delete).not.toHaveBeenCalled();
     });
   });
 });
