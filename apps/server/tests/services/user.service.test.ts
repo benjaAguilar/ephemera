@@ -40,7 +40,7 @@ describe('UserService', () => {
       };
       vi.mocked(prismaUserMock.getByUsername).mockResolvedValueOnce(userMock);
 
-      expect(async () => await userService.create('rick')).rejects.toThrow(ConflictError);
+      await expect(async () => await userService.create('rick')).rejects.toThrow(ConflictError);
       expect(prismaUserMock.create).not.toHaveBeenCalled();
     });
   });
@@ -70,18 +70,18 @@ describe('UserService', () => {
       expect(res).toBeInstanceOf(Date);
     });
 
-    it('should not update date when token verification fails', () => {
+    it('should not update date when token verification fails', async () => {
       verifyJwtMock.mockImplementation(() => {
         throw new UnauthorizedError('Invalid or expired token');
       });
 
-      expect(async () => {
+      await expect(async () => {
         await userService.updateExpiration(3, 'super-invalid-token');
       }).rejects.toThrow(UnauthorizedError);
       expect(prismaUserMock.updateExpiration).not.toHaveBeenCalled();
     });
 
-    it('Should throw an app error if expiresIn update fails', () => {
+    it('Should throw an app error if expiresIn update fails', async () => {
       const userMock = {
         id: 3,
         username: 'bart',
@@ -90,7 +90,7 @@ describe('UserService', () => {
       };
       vi.mocked(prismaUserMock.updateExpiration).mockResolvedValueOnce(userMock);
 
-      expect(async () => {
+      await expect(async () => {
         await userService.updateExpiration(3, 'super-valid-token');
       }).rejects.toThrow(AppError);
     });
@@ -143,7 +143,7 @@ describe('UserService', () => {
       const userMock = null;
       vi.mocked(prismaUserMock.getById).mockResolvedValueOnce(userMock);
 
-      expect(async () => await userService.getById(4)).rejects.toThrow(NotFoundError);
+      await expect(async () => await userService.getById(4)).rejects.toThrow(NotFoundError);
       expect(prismaUserMock.getById).toHaveBeenCalledWith(4);
     });
   });
@@ -168,7 +168,7 @@ describe('UserService', () => {
       const userMock = null;
       vi.mocked(prismaUserMock.getByUsername).mockResolvedValueOnce(userMock);
 
-      expect(async () => await userService.getByUsername('inexistent-user')).rejects.toThrow(
+      await expect(async () => await userService.getByUsername('inexistent-user')).rejects.toThrow(
         NotFoundError,
       );
       expect(prismaUserMock.getByUsername).toHaveBeenCalledWith('inexistent-user');
