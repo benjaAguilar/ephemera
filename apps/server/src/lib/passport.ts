@@ -33,20 +33,22 @@ const jwtOptions = {
   algorithms: ['HS256'] as Algorithm[],
 };
 
-export default function configurePassport(passport: Passport, userService: UserService) {
-  passport.use(
-    new jwtStrategy(jwtOptions, async (payload: JwtPayload, done: VerifiedCallback) => {
-      try {
-        const user = await userService.findById(payload.sub);
+export function createVerifyJWT(userService: UserService) {
+  return async (payload: JwtPayload, done: VerifiedCallback) => {
+    try {
+      const user = await userService.findById(payload.sub);
 
-        if (!user) {
-          return done(null, false);
-        }
-
-        return done(null, user);
-      } catch (err) {
-        return done(err, false);
+      if (!user) {
+        return done(null, false);
       }
-    }),
-  );
+
+      return done(null, user);
+    } catch (err) {
+      return done(err, false);
+    }
+  };
+}
+
+export default function configurePassport(passport: Passport, userService: UserService) {
+  passport.use(new jwtStrategy(jwtOptions, createVerifyJWT(userService)));
 }
