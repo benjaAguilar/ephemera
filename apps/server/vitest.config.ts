@@ -6,5 +6,8 @@ export default defineConfig({
     environment: 'node',
     include: ['tests/**/*.test.ts'],
     clearMocks: true,
+    env: {
+      SECRET_JWT: 'super-secret-key',
+    },
   },
 });
