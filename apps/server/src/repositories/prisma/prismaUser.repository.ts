@@ -37,5 +37,13 @@ export function createPrismaUser(prisma: PrismaClient): UserRepository {
         },
       });
     },
+
+    delete(userId) {
+      return prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+    },
   };
 }
