@@ -10,6 +10,7 @@ export interface UserService {
   getById(userId: number): Promise<User>;
   findById(userId: number): Promise<User | null>;
   getByUsername(username: string): Promise<User>;
+  delete(userId: number): Promise<User>;
 }
 
 export function createUserService(prismaRepo: UserRepository): UserService {
@@ -58,6 +59,11 @@ export function createUserService(prismaRepo: UserRepository): UserService {
       }
 
       return user;
+    },
+
+    async delete(userId) {
+      await this.getById(userId);
+      return prismaRepo.delete(userId);
     },
   };
 }

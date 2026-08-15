@@ -6,4 +6,5 @@ export interface UserRepository {
   updateExpiration(userId: number, expirationDate: Date): Promise<User>;
   getById(userId: number): Promise<User | null>;
   getByUsername(username: string): Promise<User | null>;
+  delete(userId: number): Promise<User>;
 }
