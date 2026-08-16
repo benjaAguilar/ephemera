@@ -1,7 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { calcExpiration, validateData } from '../../src/utils/utils.js';
+import { calcExpiration, getAuthenticatedUser, validateData } from '../../src/utils/utils.js';
 import { RegisterSchema } from '@ephemera/schemas';
-import { ValidationError } from '../../src/utils/customError.js';
+import { UnauthorizedError, ValidationError } from '../../src/utils/customError.js';
+import type { Request } from '../../src/types/express.js';
+
+const req = {
+  user: {
+    id: 3,
+    username: 'morty',
+  },
+} as Request;
 
 describe('utils.ts', () => {
   describe('validateData()', () => {
@@ -34,6 +42,21 @@ describe('utils.ts', () => {
 
       expect(expiresInMS).toBeTypeOf('number');
       expect(ONE_DAY_MS).toEqual(expiresInMS);
+    });
+  });
+
+  describe('getAuthenticatedUser()', () => {
+    it('should return the authenticated user if req.user is valid', () => {
+      const user = getAuthenticatedUser(req);
+
+      expect(user).toBeDefined();
+      expect(user.id).toEqual(3);
+      expect(user.username).toEqual('morty');
+    });
+
+    it('should throw UnauthorizedError if req.user is undefined', () => {
+      req.user = undefined;
+      expect(() => getAuthenticatedUser(req)).toThrow(UnauthorizedError);
     });
   });
 });
