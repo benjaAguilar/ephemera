@@ -5,6 +5,7 @@ import type { Request, Response } from '../../src/types/express.js';
 import { createJWT } from '../../src/utils/jwtUtils.js';
 import { calcExpiration, getAuthenticatedUser, validateData } from '../../src/utils/utils.js';
 import { RegisterSchema } from '@ephemera/schemas';
+import { ValidationError } from '../../src/utils/customError.js';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -82,6 +83,19 @@ describe('Auth Controller', () => {
         username: 'rick',
         ttl: '1d',
       });
+    });
+
+    it('Should throw a ValidationError if body = undefined', async () => {
+      const emptyReq = { body: undefined } as Request;
+
+      validateDataMock.mockImplementationOnce(() => {
+        throw new ValidationError('bad request');
+      });
+
+      await expect(async () => await authController.auth(emptyReq, res)).rejects.toThrow(
+        ValidationError,
+      );
+      expect(userServiceMock.create).not.toHaveBeenCalled();
     });
 
     it('should call UserService.create() with validated data', async () => {
