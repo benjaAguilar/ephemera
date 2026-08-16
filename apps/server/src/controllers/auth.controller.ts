@@ -12,9 +12,7 @@ interface AuthController {
 export function createAuthController(userService: UserService): AuthController {
   return {
     async auth(req, res) {
-      //TODO: fix bug, if username/ttl = undefined app crashes (see issue #130)
-      const { username, ttl } = req.body;
-      const data = validateData(RegisterSchema, { username, ttl });
+      const data = validateData(RegisterSchema, req.body);
 
       const user = await userService.create(data.username);
 
