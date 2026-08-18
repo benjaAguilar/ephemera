@@ -45,5 +45,15 @@ export function createPrismaUser(prisma: PrismaClient): UserRepository {
         },
       });
     },
+
+    deleteExpired() {
+      return prisma.user.deleteMany({
+        where: {
+          expiresIn: {
+            lte: new Date(),
+          },
+        },
+      });
+    },
   };
 }
