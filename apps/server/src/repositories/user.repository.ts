@@ -1,5 +1,6 @@
 import type { RegisterType } from '@ephemera/schemas';
 import type { User } from '../../prisma/generated/prisma/client.js';
+import type { BatchPayload } from '../../prisma/generated/prisma/internal/prismaNamespace.js';
 
 export interface UserRepository {
   create(username: RegisterType['username']): Promise<User>;
@@ -7,4 +8,5 @@ export interface UserRepository {
   getById(userId: number): Promise<User | null>;
   getByUsername(username: string): Promise<User | null>;
   delete(userId: number): Promise<User>;
+  deleteExpired(): Promise<BatchPayload>;
 }
