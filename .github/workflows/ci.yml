@@ -36,6 +36,9 @@ jobs:
       - name: Build local packages
         run: pnpm build:packages
 
+      - name: Generate Prisma Client
+        run: pnpm --filter @ephemera/server prisma:generate
+
       - name: Check linting
         run: pnpm lint
 
