@@ -8,6 +8,10 @@ declare module 'vitest' {
   }
 }
 
+declare global {
+  var __POSTGRES_CONTAINER__: StartedPostgreSqlContainer;
+}
+
 let container: StartedPostgreSqlContainer;
 
 export async function setup(project: TestProject) {
@@ -25,7 +29,7 @@ export async function setup(project: TestProject) {
     env: { ...process.env, DATABASE_URL: databaseUrl },
   });
 
-  (globalThis as any).__POSTGRES_CONTAINER__ = container;
+  globalThis.__POSTGRES_CONTAINER__ = container;
 }
 
 export async function teardown() {
