@@ -19,6 +19,7 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
+      SECRET_JWT: super-secret-jwt
 
     steps:
       - uses: actions/checkout@v4
