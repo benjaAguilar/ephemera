@@ -17,6 +17,10 @@ jobs:
       matrix:
         node-version: [22.x]
 
+    env:
+      DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
+      SECRET_JWT: super-secret-jwt
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,6 +39,9 @@ jobs:
 
       - name: Build local packages
         run: pnpm build:packages
+
+      - name: Generate Prisma Client
+        run: pnpm --filter @ephemera/server prisma:generate
 
       - name: Check linting
         run: pnpm lint

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { calcExpiration, getAuthenticatedUser, validateData } from '../../src/utils/utils.js';
+import { calcExpiration, getAuthenticatedUser, validateData } from '../../../src/utils/utils.js';
 import { RegisterSchema } from '@ephemera/schemas';
-import { UnauthorizedError, ValidationError } from '../../src/utils/customError.js';
-import type { Request } from '../../src/types/express.js';
+import { UnauthorizedError, ValidationError } from '../../../src/utils/customError.js';
+import type { Request } from '../../../src/types/express.js';
 
 const req = {
   user: {

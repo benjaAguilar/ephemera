@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { UserService } from '../../src/services/user.service.js';
-import configurePassport, { createVerifyJWT } from '../../src/lib/passport.js';
+import type { UserService } from '../../../src/services/user.service.js';
+import configurePassport, { createVerifyJWT } from '../../../src/lib/passport.js';
 import passport from 'passport';
 import { Strategy as jwtStrategy, type VerifiedCallback } from 'passport-jwt';
-import { AppError } from '../../src/utils/customError.js';
+import { AppError } from '../../../src/utils/customError.js';
 
 const userServiceMock: UserService = {
   create: vi.fn(),

@@ -24,6 +24,7 @@ services:
       - /ephemera/node_modules
       - /ephemera/apps/server/node_modules
       - /ephemera/apps/client/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
     command: sh ./docker/entrypoint.dev.sh
     ports:
       - 3000:3000

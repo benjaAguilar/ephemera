@@ -1,15 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { UserRepository } from '../../src/repositories/user.repository.js';
-import { createUserService } from '../../src/services/user.service.js';
-import { verifyJWT } from '../../src/utils/jwtUtils.js';
+import type { UserRepository } from '../../../src/repositories/user.repository.js';
+import { createUserService } from '../../../src/services/user.service.js';
+import { verifyJWT } from '../../../src/utils/jwtUtils.js';
 import {
   AppError,
   ConflictError,
   NotFoundError,
   UnauthorizedError,
-} from '../../src/utils/customError.js';
+} from '../../../src/utils/customError.js';
 
-vi.mock('../../src/utils/jwtUtils.ts', () => ({
+vi.mock('../../../src/utils/jwtUtils.ts', () => ({
   verifyJWT: vi.fn(),
 }));
 
