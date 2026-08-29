@@ -2,12 +2,30 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true, // describe/it/expect sin importar
+    globals: true,
     environment: 'node',
-    include: ['tests/**/*.test.ts'],
     clearMocks: true,
-    env: {
-      SECRET_JWT: 'super-secret-key',
-    },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['./tests/unit/**/*.test.ts'],
+          env: {
+            SECRET_JWT: 'super-secret-key',
+          },
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'integration',
+          include: ['./tests/integration/**/*.test.ts'],
+          globalSetup: ['./tests/integration/globalSetup.ts'],
+          setupFiles: ['./tests/integration/setup.ts'],
+          fileParallelism: false,
+        },
+      },
+    ],
   },
 });
