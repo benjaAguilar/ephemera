@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import type { CleanupService } from '../../src/services/cleanup.service.js';
-import { CLEANUP_INTERVAL, startCleanupScheduler } from '../../src/schedulers/cleanup.scheduler.js';
-import type { BatchPayload } from '../../prisma/generated/prisma/internal/prismaNamespace.js';
-import { AppError } from '../../src/utils/customError.js';
+import type { CleanupService } from '../../../src/services/cleanup.service.js';
+import {
+  CLEANUP_INTERVAL,
+  startCleanupScheduler,
+} from '../../../src/schedulers/cleanup.scheduler.js';
+import type { BatchPayload } from '../../../prisma/generated/prisma/internal/prismaNamespace.js';
+import { AppError } from '../../../src/utils/customError.js';
 
 const cleanupServiceMock: CleanupService = {
   cleanExpiredUsers: vi.fn().mockResolvedValue({ count: 0 }),

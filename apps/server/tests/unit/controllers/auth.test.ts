@@ -1,18 +1,18 @@
 import { describe, it, expect, vi } from 'vitest';
-import { type UserService } from '../../src/services/user.service.js';
-import { createAuthController } from '../../src/controllers/auth.controller.js';
-import type { Request, Response } from '../../src/types/express.js';
-import { createJWT } from '../../src/utils/jwtUtils.js';
-import { calcExpiration, getAuthenticatedUser, validateData } from '../../src/utils/utils.js';
+import { type UserService } from '../../../src/services/user.service.js';
+import { createAuthController } from '../../../src/controllers/auth.controller.js';
+import type { Request, Response } from '../../../src/types/express.js';
+import { createJWT } from '../../../src/utils/jwtUtils.js';
+import { calcExpiration, getAuthenticatedUser, validateData } from '../../../src/utils/utils.js';
 import { RegisterSchema } from '@ephemera/schemas';
-import { ValidationError } from '../../src/utils/customError.js';
+import { ValidationError } from '../../../src/utils/customError.js';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
-vi.mock('../../src/utils/jwtUtils.ts', () => ({
+vi.mock('../../../src/utils/jwtUtils.ts', () => ({
   createJWT: vi.fn().mockReturnValue('super-token'),
 }));
-vi.mock('../../src/utils/utils.ts', () => ({
+vi.mock('../../../src/utils/utils.ts', () => ({
   calcExpiration: vi.fn().mockReturnValue(86400000),
   validateData: vi.fn().mockReturnValue({ username: 'rick', ttl: '1d' }),
   getAuthenticatedUser: vi.fn().mockReturnValue((req: Request) => req.user),

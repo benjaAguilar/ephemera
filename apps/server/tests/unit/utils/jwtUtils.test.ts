@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, assert } from 'vitest';
-import { createJWT, verifyJWT, type JWTpayload } from '../../src/utils/jwtUtils.js';
-import { AppError, UnauthorizedError } from '../../src/utils/customError.js';
+import { createJWT, verifyJWT, type JWTpayload } from '../../../src/utils/jwtUtils.js';
+import { AppError, UnauthorizedError } from '../../../src/utils/customError.js';
 import jsonwebtoken from 'jsonwebtoken';
 
 describe('JWT Utils', () => {

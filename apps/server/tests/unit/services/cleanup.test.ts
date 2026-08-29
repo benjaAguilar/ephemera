@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { UserRepository } from '../../src/repositories/user.repository.js';
-import { createCleanupService } from '../../src/services/cleanup.service.js';
+import type { UserRepository } from '../../../src/repositories/user.repository.js';
+import { createCleanupService } from '../../../src/services/cleanup.service.js';
 
 const prismaUserMock: UserRepository = {
   create: vi.fn(),
