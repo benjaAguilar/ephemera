@@ -2,7 +2,7 @@
 
 cd apps/server/
 
-pnpm dlx prisma migrate deploy
+pnpm exec prisma migrate deploy
 
 cd ../../
 
