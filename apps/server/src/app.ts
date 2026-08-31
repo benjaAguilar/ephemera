@@ -1,37 +1,38 @@
-import express from 'express';
+import express, { Router } from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import router from './routes/index.js';
 import { errorHandler } from './controllers/errorHandler.js';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import configurePassport from './lib/passport.js';
-import { userService } from './services/index.js';
+import { type Services } from './services/index.js';
 
-const app = express();
+export function createApp(services: Services, router: Router) {
+  const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser());
+  app.use(cookieParser());
 
-configurePassport(passport, userService);
-app.use(passport.initialize());
+  configurePassport(passport, services.userService);
+  app.use(passport.initialize());
 
-app.use('/api', router);
+  app.use('/api', router);
 
-if (process.env.NODE_ENV === 'production') {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  if (process.env.NODE_ENV === 'production') {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
 
-  const publicPath = path.join(__dirname, '../public');
-  app.use(express.static(publicPath));
+    const publicPath = path.join(__dirname, '../public');
+    app.use(express.static(publicPath));
 
-  app.get('/{*splat}', (_req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
-  });
+    app.get('/{*splat}', (_req, res) => {
+      res.sendFile(path.join(publicPath, 'index.html'));
+    });
+  }
+
+  app.use(errorHandler);
+
+  return app;
 }
-
-app.use(errorHandler);
-
-export default app;

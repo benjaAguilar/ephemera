@@ -1,4 +1,13 @@
-import { prisma } from '../../lib/prisma.js';
+import type { PrismaClient } from '@prisma/client/extension';
 import { createPrismaUser } from './prismaUser.repository.js';
+import type { UserRepository } from '../user.repository.js';
 
-export const prismaUser = createPrismaUser(prisma);
+export interface Repositories {
+  prismaUser: UserRepository;
+}
+
+export function createRepositories(prisma: PrismaClient): Repositories {
+  return {
+    prismaUser: createPrismaUser(prisma),
+  };
+}

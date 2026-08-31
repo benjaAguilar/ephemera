@@ -1,6 +1,15 @@
-import { prismaUser } from '../repositories/prisma/index.js';
-import { createCleanupService } from './cleanup.service.js';
-import { createUserService } from './user.service.js';
+import { type Repositories } from '../repositories/prisma/index.js';
+import { createCleanupService, type CleanupService } from './cleanup.service.js';
+import { createUserService, type UserService } from './user.service.js';
 
-export const userService = createUserService(prismaUser);
-export const cleanupService = createCleanupService(prismaUser);
+export interface Services {
+  userService: UserService;
+  cleanupService: CleanupService;
+}
+
+export function createServices(repos: Repositories): Services {
+  return {
+    userService: createUserService(repos.prismaUser),
+    cleanupService: createCleanupService(repos.prismaUser),
+  };
+}

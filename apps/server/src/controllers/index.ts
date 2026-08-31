@@ -1,4 +1,12 @@
-import { userService } from '../services/index.js';
-import { createAuthController } from './auth.controller.js';
+import type { Services } from '../services/index.js';
+import { createAuthController, type AuthController } from './auth.controller.js';
 
-export const authController = createAuthController(userService);
+export interface Controllers {
+  authController: AuthController;
+}
+
+export function createControllers(services: Services): Controllers {
+  return {
+    authController: createAuthController(services.userService),
+  };
+}

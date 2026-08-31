@@ -1,8 +1,13 @@
 import { Router } from 'express';
-import authRouter from './auth.routes.js';
-const router = Router();
+import type { Controllers } from '../controllers/index.js';
+import { createAuthRouter } from './auth.routes.js';
 
-router.get('/', (_req, res) => res.json({ message: 'Hello World' }));
-router.use('/auth', authRouter);
+export function createRouter(controllers: Controllers) {
+  const router = Router();
 
-export default router;
+  router.get('/', (_req, res) => res.json({ message: 'Hello World' }));
+
+  router.use('/auth', createAuthRouter(controllers.authController));
+
+  return router;
+}
