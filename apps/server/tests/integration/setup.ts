@@ -7,7 +7,7 @@ import { createApp } from '../../src/app.js';
 import { createRouter } from '../../src/routes/index.js';
 import { createControllers } from '../../src/controllers/index.js';
 
-const prisma = createPrismaTest();
+export const prisma = createPrismaTest();
 const testRepos = createRepositories(prisma);
 const testServices = createServices(testRepos);
 const testControllers = createControllers(testServices);
