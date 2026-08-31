@@ -24,6 +24,9 @@ export default defineConfig({
           globalSetup: ['./tests/integration/globalSetup.ts'],
           setupFiles: ['./tests/integration/setup.ts'],
           fileParallelism: false,
+          env: {
+            SECRET_JWT: 'super-secret-key',
+          },
         },
       },
     ],
