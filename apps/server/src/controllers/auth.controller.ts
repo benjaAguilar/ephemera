@@ -4,7 +4,7 @@ import type { Request, Response } from '../types/express.js';
 import { createJWT } from '../utils/jwtUtils.js';
 import { calcExpiration, getAuthenticatedUser, validateData } from '../utils/utils.js';
 
-interface AuthController {
+export interface AuthController {
   auth(req: Request, res: Response): Promise<void>;
   killSession(req: Request, res: Response): Promise<void>;
 }
