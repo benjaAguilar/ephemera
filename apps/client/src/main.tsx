@@ -1,9 +1,16 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import { Hero } from './pages/Hero';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root');
+
+ReactDOM.createRoot(root!).render(
   <StrictMode>
-    <Hero />
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Hero />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 );
