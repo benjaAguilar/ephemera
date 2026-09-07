@@ -8,6 +8,7 @@ export function createAuthRouter(authController: AuthController) {
 
   authRouter.post('/', tryCatch(authController.auth));
   authRouter.post('/kill', jwtAuthStrategy, tryCatch(authController.killSession));
+  authRouter.get('/session', jwtAuthStrategy, tryCatch(authController.session));
 
   return authRouter;
 }
