@@ -7,6 +7,7 @@ import { calcExpiration, getAuthenticatedUser, validateData } from '../utils/uti
 export interface AuthController {
   auth(req: Request, res: Response): Promise<void>;
   killSession(req: Request, res: Response): Promise<void>;
+  session(req: Request, res: Response): Promise<void>;
 }
 
 export function createAuthController(userService: UserService): AuthController {
@@ -48,6 +49,15 @@ export function createAuthController(userService: UserService): AuthController {
         .json({
           message: `User ${delUser.username} has expired`,
         });
+    },
+
+    async session(req, res) {
+      const user = getAuthenticatedUser(req);
+
+      res.status(200).json({
+        message: 'retrieved session successfully',
+        user: user,
+      });
     },
   };
 }

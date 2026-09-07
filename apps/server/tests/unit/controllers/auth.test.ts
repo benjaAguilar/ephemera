@@ -167,4 +167,24 @@ describe('Auth Controller', () => {
       });
     });
   });
+
+  describe('session()', () => {
+    it('Should call get authenticated user and return expected values', async () => {
+      const userMock = {
+        id: 1,
+        username: 'rick',
+        expiresIn: new Date(),
+        createdAt: new Date(),
+      };
+      getAuthenticatedUserMock.mockReturnValue(userMock);
+
+      await authController.session(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: 'retrieved session successfully',
+        user: userMock,
+      });
+    });
+  });
 });

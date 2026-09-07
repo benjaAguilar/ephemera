@@ -94,4 +94,31 @@ describe('Auth Integration', () => {
       expect(res.status).toBe(401);
     });
   });
+
+  describe('GET /api/auth/session', () => {
+    it('should return the autheticated user if exists', async () => {
+      const createUserRes = await request(app).post('/api/auth').send({
+        username: 'test-user',
+        ttl: '1h',
+      });
+
+      const cookie = createUserRes.headers['set-cookie'];
+
+      const res = await request(app)
+        .get('/api/auth/session')
+        .set('Cookie', cookie ? cookie : '');
+
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({
+        message: 'retrieved session successfully',
+        user: { username: 'test-user' },
+      });
+    });
+
+    it('should return 401 unauthorized if session does not exist', async () => {
+      const res = await request(app).get('/api/auth/session');
+
+      expect(res.status).toBe(401);
+    });
+  });
 });
