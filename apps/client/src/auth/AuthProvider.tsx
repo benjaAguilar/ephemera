@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from './auth.api';
 import { type User, AuthContext } from './authContext';
+import { api } from '../api';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -9,10 +9,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function loadUser() {
       try {
-        const res = await getCurrentUser();
+        const user = await api.auth.getCurrentUser();
 
-        if (res) {
-          setUser(res.user);
+        if (user) {
+          setUser(user);
         }
       } finally {
         setIsLoading(false);
