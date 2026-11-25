@@ -23,11 +23,7 @@ export function createAuthApi(api: ApiClient): AuthApi {
     },
 
     async createUser(username, ttl) {
-      try {
-        await api.post('/api/auth', { username, ttl });
-      } catch (error) {
-        throw error;
-      }
+      await api.post('/api/auth', { username, ttl });
     },
   };
 }
