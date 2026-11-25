@@ -36,4 +36,22 @@ describe('Auth API', () => {
       await expect(async () => await auth.getCurrentUser()).rejects.toThrow(ApiError);
     });
   });
+
+  describe('createUser()', () => {
+    it('Should call /api/auth with expected username and ttl', async () => {
+      await auth.createUser('rick', '15m');
+      expect(mockApiClient.post).toHaveBeenCalledWith('/api/auth', {
+        username: 'rick',
+        ttl: '15m',
+      });
+    });
+
+    it('Should throw an unexpected error if happens', async () => {
+      vi.mocked(mockApiClient.post).mockRejectedValueOnce(
+        new ApiError(500, 'Internal server error'),
+      );
+
+      await expect(async () => await auth.createUser('rick', '30m')).rejects.toThrow(ApiError);
+    });
+  });
 });
