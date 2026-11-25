@@ -1,3 +1,5 @@
+import { LoginForm } from '../components/auth/LoginForm';
+
 export function Hero() {
   return (
     <section>
@@ -9,6 +11,7 @@ export function Hero() {
         deleted.
       </p>
       <q>Nothing in Ephemera is meant to outlive its purpose...</q>
+      <LoginForm />
     </section>
   );
 }
