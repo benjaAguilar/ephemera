@@ -1,9 +1,10 @@
-import type { CurrentUserType } from '@ephemera/schemas';
+import type { CurrentUserType, RegisterType } from '@ephemera/schemas';
 import type { ApiClient } from './client';
 import { ApiError } from '../utils/customError';
 
 export interface AuthApi {
   getCurrentUser(): Promise<CurrentUserType | null>;
+  createUser(username: string, ttl: RegisterType['ttl']): Promise<void>;
 }
 
 export function createAuthApi(api: ApiClient): AuthApi {
@@ -17,6 +18,14 @@ export function createAuthApi(api: ApiClient): AuthApi {
           return null;
         }
 
+        throw error;
+      }
+    },
+
+    async createUser(username, ttl) {
+      try {
+        await api.post('/api/auth', { username, ttl });
+      } catch (error) {
         throw error;
       }
     },
